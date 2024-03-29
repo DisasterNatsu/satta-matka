@@ -191,3 +191,47 @@ export const postPattiTips = async (req: Request, res: Response) => {
       .json({ message: "Something happened while writing the data", error });
   }
 };
+
+export const deleteFromResults = async (req: Request, res: Response) => {
+  // get the data from request body
+
+  const { date, indexAt }: { date: string; indexAt: string } = req.body;
+
+  // try catch block
+
+  try {
+    // change the string index to number
+
+    const index = toNumber(indexAt);
+
+    // check for existing data
+
+    let existingData = await MatkaData.findOne({ date });
+
+    if (!existingData) {
+      return res
+        .status(404)
+        .json({ message: `No result found for the date: ${date}` });
+    }
+
+    // Filter out the data array removing the object with the specified index
+    existingData.data = existingData.data.filter(
+      (item: GameData) => item.index !== index
+    );
+
+    // If after removing the specified index, there's no more data, delete the document
+    if (existingData.data.length === 0) {
+      await MatkaData.deleteOne({ date });
+    } else {
+      // If there's remaining data, save the updated document
+      const updatedData = await existingData.save();
+      return res.status(200).json(updatedData);
+    }
+
+    return res.status(200).json({ message: "Work in progress" });
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ message: "Something happened deleting data", error });
+  }
+};

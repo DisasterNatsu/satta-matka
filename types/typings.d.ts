@@ -19,7 +19,7 @@ interface GameData {
   index: number;
   gameResultPatti: number;
   gameNumber: number;
-  _id: string;
+  _id?: string;
 }
 
 interface GameEntry {

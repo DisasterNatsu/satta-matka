@@ -20,8 +20,6 @@ export const isAdminAuth = (
       process.env.ADMIN_JWT_SECRET!
     ) as TokenVerifyType;
 
-    console.log(isAuth);
-
     req.admin = isAuth.email; // send it as req.admin
 
     next();
