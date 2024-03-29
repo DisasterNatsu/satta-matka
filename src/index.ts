@@ -29,6 +29,28 @@ app.use(express.json());
 
 // use cors (currently it's global)
 
+// define origin
+
+const origins: string[] = [
+  "https://smartmumbaimatka.in",
+  "https://admin.kolkataff.space",
+  "https://localhost:3000",
+];
+
+const corsOptions = {
+  origin: function (
+    origin: string | undefined,
+    callback: (error: Error | null, allow?: boolean) => void
+  ) {
+    if (!origin || origins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  optionsSuccessStatus: 200,
+};
+
 app.use(cors());
 
 // routes
