@@ -1,6 +1,12 @@
 import { Request, Response } from "express";
-import { MatkaData, MatkaPattiTips, Tips } from "../../schema/MongoSchema";
+import {
+  MatkaData,
+  MatkaPattiTips,
+  RepeatPatti,
+  Tips,
+} from "../../schema/MongoSchema";
 import { toNumber } from "../../helpers/indexConverter";
+import { toNumberTens } from "../../helpers/TenIndexConverter";
 
 export const postMatkaData = async (req: Request, res: Response) => {
   // required data recieved from request's body
@@ -233,5 +239,55 @@ export const deleteFromResults = async (req: Request, res: Response) => {
     return res
       .status(500)
       .json({ message: "Something happened deleting data", error });
+  }
+};
+
+export const postRepetPatti = async (req: Request, res: Response) => {
+  // get data from request's body
+
+  let {
+    repeatPattiData,
+    indexAt,
+  }: { repeatPattiData: RepeatPattiObject; indexAt: string } = req.body;
+
+  console.log(req.body);
+
+  // try catch block
+
+  try {
+    // convert index to number
+
+    const index = toNumberTens(indexAt);
+
+    repeatPattiData.index = index;
+
+    let existingData = await RepeatPatti.findOne();
+
+    if (!existingData) {
+      existingData = new RepeatPatti({ repeatPatti: [] }); // create new entry
+    }
+
+    const existingIndex = existingData.repeatPatti.findIndex(
+      (item) => item.index === index
+    );
+
+    if (existingIndex !== -1) {
+      existingData.repeatPatti[existingIndex] = repeatPattiData;
+    } else if (existingData.repeatPatti.length < 10) {
+      existingData.repeatPatti.push(repeatPattiData);
+    } else {
+      return res.status(400).json({ message: "Invalid Request" });
+    }
+
+    // Sort the data array by index
+    existingData.repeatPatti.sort((a, b) => a.index - b.index);
+
+    const updatedData = await existingData.save();
+
+    return res.status(200).json(updatedData);
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ message: "Something happened while wrting repeat patti", error });
   }
 };

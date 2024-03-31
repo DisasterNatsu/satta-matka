@@ -29,3 +29,8 @@ interface GameEntry {
   createdAt?: string;
   __v: number;
 }
+
+interface RepeatPattiObject {
+  patti: string;
+  index: number;
+}

@@ -63,15 +63,13 @@ try {
   // connect to database
 
   mongoose
-    .connect(
-      "mongodb://MumbaiMatkaAdmin:Disaster%401997@localhost:27017/mumbaiMatka"
-    )
+    .connect("mongodb://adminFatafat:Disaster%401997@localhost:27017/fatafat")
     .then(() => console.log("Connected to database"));
 
   // start the server
 
-  app.listen(process.env.PORT || 8080, () => {
-    console.log(`Listning on port ${process.env.PORT || 8080}`);
+  app.listen(process.env.PORT || 8020, () => {
+    console.log(`Listning on port ${process.env.PORT || 8020}`);
   });
 } catch (error) {
   console.error(error);

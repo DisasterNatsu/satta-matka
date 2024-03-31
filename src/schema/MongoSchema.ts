@@ -34,8 +34,23 @@ const tips: Schema<TipsData> = new Schema({
 interface IMatkaData extends Document {
   date: string;
   data: { index: number; gameResultPatti: number; gameNumber: number }[];
-  createdAt: Date; // Add createdAt field
+  createdAt: Date;
 }
+
+// Define Repeat Patti Tips
+
+interface RepeatpattiData extends Document {
+  repeatPatti: { index: number; patti: string }[];
+}
+
+const repeatpatti: Schema<RepeatpattiData> = new Schema({
+  repeatPatti: [
+    {
+      index: { type: Number, required: true },
+      patti: { type: String, required: true },
+    },
+  ],
+});
 
 // Define the matkaData schema
 const mumbaiMatkaSchema: Schema<IMatkaData> = new Schema({
@@ -67,3 +82,7 @@ export const Tips = mongoose.model("MatkaTips", tips);
 
 // Export Patti Tips
 export const MatkaPattiTips = mongoose.model("MatkaPattiTips", tips);
+
+// Export Repeat Patti
+
+export const RepeatPatti = mongoose.model("MatkaRepeatPatti", repeatpatti);
