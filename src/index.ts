@@ -34,7 +34,6 @@ app.use(express.json());
 const origins: string[] = [
   "https://smartmumbaimatka.in",
   "https://admin.kolkataff.space",
-  "https://localhost:3000",
 ];
 
 const corsOptions = {
